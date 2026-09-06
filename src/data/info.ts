@@ -226,26 +226,6 @@ export type Project = {
 
 export const projects: Project[] = [
   {
-    name: "ventx",
-    kind: "Research",
-    year: "2026",
-    summary:
-      "226M-parameter decoder-only transformer, trained from scratch with native long-context support.",
-    stack: ["PyTorch", "Python", "Transformers"],
-    repo: "https://github.com/Narla-Venkata-Anand-Sai-Kumar/ventx",
-    featured: true,
-  },
-  {
-    name: "Chaos-135M",
-    kind: "Research",
-    year: "2026",
-    summary:
-      "From-scratch 134.5M-parameter decoder-only LLM specialized for SQL generation and tool calling, benchmarked end-to-end on a single RTX 5060 8GB.",
-    stack: ["PyTorch", "Python", "Transformers", "SQL"],
-    repo: "https://github.com/Narla-Venkata-Anand-Sai-Kumar/Chaos-135M",
-    featured: true,
-  },
-  {
     name: "GreenPulse",
     kind: "GenAI App",
     year: "2025",
@@ -369,6 +349,117 @@ export const researchWork: Project[] = [
     summary: "Cross-platform Flutter app delivering the graphology model on mobile, desktop, and web via TensorFlow Lite.",
     stack: ["Flutter", "Dart", "TFLite"],
     repo: "https://github.com/Narla-Venkata-Anand-Sai-Kumar/Flutter-Graphology",
+  },
+];
+
+export type LlmResearchStrategy = {
+  label: string;
+  points: string[];
+};
+
+export type LlmResearchProject = {
+  name: string;
+  tagline: string;
+  year: string;
+  status: string;
+  params: string;
+  repo: string;
+  summary: string;
+  stack: string[];
+  hardware: string[];
+  strategies: LlmResearchStrategy[];
+};
+
+export const llmResearch: LlmResearchProject[] = [
+  {
+    name: "ventx",
+    tagline: "VenTX-100K — a native long-context transformer",
+    year: "2026",
+    status: "Base pretraining in progress",
+    params: "226.1M",
+    repo: "https://github.com/Narla-Venkata-Anand-Sai-Kumar/ventx",
+    summary:
+      "A decoder-only transformer scaled up from Chaos-135M, built around native long context — full dense self-attention out to 32K tokens today, with a staged path to 65K–100K, rather than sliding windows or attention sinks bolted on after the fact.",
+    stack: ["PyTorch", "Python", "Muon", "AdamW", "RoPE"],
+    hardware: ["RTX 5060 (8GB)", "RTX 4090", "B200 (cloud)"],
+    strategies: [
+      {
+        label: "Architecture",
+        points: [
+          "14 layers, d_model 960, SwiGLU FFN at 3,584",
+          "Grouped-query attention — 15 query heads / 5 KV heads (3:1 ratio), head dim 64",
+          "RoPE positional encoding, RMSNorm with QK-norm, tied input/output embeddings",
+          "49,152-token vocabulary",
+        ],
+      },
+      {
+        label: "Context strategy",
+        points: [
+          "32,768 tokens of native dense attention today; staged extension planned to 65K–100K",
+          "Deliberately avoids sliding-window and attention-sink approximations — full per-layer self-attention across the whole sequence",
+        ],
+      },
+      {
+        label: "Data",
+        points: [
+          "~4.27B-token corpus: 70% long-form (BookCorpusOpen, Project Gutenberg) and 30% short-form web / educational / mathematical / code content",
+          "Mix chosen to expose the model to genuinely continuous documents during pretraining, not just concatenated short spans",
+        ],
+      },
+      {
+        label: "Optimization",
+        points: [
+          "Muon (Newton–Schulz orthogonalized momentum) for 2D weight matrices; AdamW for embeddings and norms",
+          "Checkpoints published mid-run for transparency, with `--resume` (full optimizer state) and `--init` (weights-only) restart paths",
+        ],
+      },
+    ],
+  },
+  {
+    name: "Chaos-135M",
+    tagline: "A from-scratch LLM for SQL + tool calling on one consumer GPU",
+    year: "2026",
+    status: "Trained and benchmarked",
+    params: "134.5M",
+    repo: "https://github.com/Narla-Venkata-Anand-Sai-Kumar/Chaos-135M",
+    summary:
+      "An end-to-end decoder-only LLM — tokenizer, data pipeline, training loop, and constrained decoder — built from scratch and trained entirely on a single RTX 5060 (8GB), specialized for executable SQL generation and schema-safe tool calling.",
+    stack: ["PyTorch", "Python", "Muon", "Triton", "BFCL"],
+    hardware: ["RTX 5060 (8GB)"],
+    strategies: [
+      {
+        label: "Architecture",
+        points: [
+          "RoPE, RMSNorm with QK-norm, grouped-query attention with a sliding window, SwiGLU activation",
+          "Tied embeddings; an MLA (multi-head latent attention) variant available alongside the default",
+          "KV-cache incremental decoding for inference",
+        ],
+      },
+      {
+        label: "Tokenizer & data",
+        points: [
+          "Custom BPE tokenizer, 49,152-token vocabulary",
+          "Web, educational, and mathematical shards stored as streamed uint16 token shards",
+        ],
+      },
+      {
+        label: "Training recipe",
+        points: [
+          "20,000-step run on a WSD (warmup–stable–decay) schedule with gradient accumulation (micro-batch 4 × 16 steps, 2,048-token context)",
+          "bf16 mixed precision, gradient checkpointing, and CUDA expandable segments to fit an 8GB card",
+          "Muon optimizer for 2D matrices, a separate AdamW group for embeddings/head/norms",
+          "Treats `triton-windows` as required, not optional — torch.compile loses ~40% throughput without it",
+        ],
+      },
+      {
+        label: "Evaluation & constrained decoding",
+        points: [
+          "Live dashboard tracks checkpoints against reduced-sample ARC, HellaSwag, and PIQA — scored CPU-only to avoid contending with training for GPU time",
+          "SQL correctness measured by actual query execution, not just syntax matching",
+          "Tool calling validated BFCL-style; a JSON-automaton constrained decoder guarantees schema-valid output via logit masking",
+        ],
+      },
+    ],
   },
 ];
 
@@ -689,6 +780,7 @@ export const nav = [
   { label: "Work", href: "/work" },
   { label: "Projects", href: "/projects" },
   { label: "Research", href: "/research" },
+  { label: "LLM Research", href: "/llm-research" },
   { label: "Writing", href: "/posts" },
   { label: "Contact", href: "/contact" },
 ] as const;
