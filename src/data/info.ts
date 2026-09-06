@@ -2,7 +2,7 @@ export const profile = {
   name: "Venkata Anand Sai Kumar Narla",
   short: "Venny",
   pronouns: "He/Him",
-  title: "Software Engineer II — AI",
+  title: "Senior Software Engineer — AI",
   company: "Everstage",
   tagline: "Building agentic AI and LLM infrastructure.",
   location: "Bengaluru, India",
@@ -79,15 +79,25 @@ export const experiences: Experience[] = [
     company: "Everstage",
     location: "Coimbatore, Tamil Nadu",
     locationType: "On-site",
-    totalDuration: "1 yr 4 mos",
+    totalDuration: "1 yr 7 mos",
     href: "https://www.everstage.com",
     logo: "https://www.google.com/s2/favicons?domain=everstage.com&sz=256",
     roles: [
       {
+        title: "Senior Software Engineer — AI",
+        type: "Full-time",
+        dates: "Sep 2026 — Present",
+        duration: "1 mo",
+        bullets: [
+          "Promoted to Senior Software Engineer — AI, taking on broader ownership of the LLM evaluation and orchestration platform powering Everstage's sales-compensation product.",
+        ],
+        skills: ["Python", "React.js", "LangSmith", "Temporal IO", "Multi-tenant systems"],
+      },
+      {
         title: "Software Engineer II — AI",
         type: "Full-time",
-        dates: "Feb 2026 — Present",
-        duration: "4 mos",
+        dates: "Feb 2026 — Sep 2026",
+        duration: "7 mos",
         bullets: [
           "Spearheaded the architecture and implementation of a scalable LLM evaluation framework — dataset versioning, modular evaluator cloning, and deterministic scoring across core agents and synthetic test environments.",
           "Integrated Temporal IO workflows to orchestrate distributed batch operations, sidestepping LLM-provider timeout constraints and powering a real-time UI polling layer for asynchronous task status.",
@@ -215,6 +225,26 @@ export type Project = {
 };
 
 export const projects: Project[] = [
+  {
+    name: "ventx",
+    kind: "Research",
+    year: "2026",
+    summary:
+      "226M-parameter decoder-only transformer, trained from scratch with native long-context support.",
+    stack: ["PyTorch", "Python", "Transformers"],
+    repo: "https://github.com/Narla-Venkata-Anand-Sai-Kumar/ventx",
+    featured: true,
+  },
+  {
+    name: "Chaos-135M",
+    kind: "Research",
+    year: "2026",
+    summary:
+      "From-scratch 134.5M-parameter decoder-only LLM specialized for SQL generation and tool calling, benchmarked end-to-end on a single RTX 5060 8GB.",
+    stack: ["PyTorch", "Python", "Transformers", "SQL"],
+    repo: "https://github.com/Narla-Venkata-Anand-Sai-Kumar/Chaos-135M",
+    featured: true,
+  },
   {
     name: "GreenPulse",
     kind: "GenAI App",

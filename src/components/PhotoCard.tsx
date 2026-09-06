@@ -62,7 +62,7 @@ export function PhotoCard({
                 {profile.short}
               </p>
               <p className="mt-1.5 truncate font-mono text-[10px] uppercase tracking-[0.22em] text-ink-500">
-                Software Engineer II — AI
+                Senior Software Engineer — AI
               </p>
             </div>
             <div className="text-right">
